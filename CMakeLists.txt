@@ -35,13 +35,21 @@ INCLUDE_DIRECTORIES(AFTER ${CMAKE_BINARY_DIR} ${yasm_SOURCE_DIR})
 
 INCLUDE(ConfigureChecks.cmake)
 
+IF(DEFINED YASM_VER)
+  SET(ver _${YASM_VER})
+  SET(verDir /${PROJECT_NAME}${ver})
+ENDIF()
+SET(targetsFile ${PROJECT_NAME}${ver}-targets)
+
 ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(libyasm)
 ADD_SUBDIRECTORY(modules)
 ADD_SUBDIRECTORY(frontends)
 
+INSTALL(EXPORT ${targetsFile} DESTINATION bin/cmake)
+
 INSTALL(FILES
     libyasm.h
     ${CMAKE_BINARY_DIR}/libyasm-stdint.h
-    DESTINATION include
+    DESTINATION include${verDir}
     )

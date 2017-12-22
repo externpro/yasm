@@ -38,11 +38,12 @@ IF(BUILD_SHARED_LIBS)
         )
 ELSE(BUILD_SHARED_LIBS)
     SET_TARGET_PROPERTIES(libyasm PROPERTIES
+        OUTPUT_NAME "yasm${ver}"
         COMPILE_FLAGS -DYASM_LIB_SOURCE
         )
 ENDIF(BUILD_SHARED_LIBS)
 
-INSTALL(TARGETS libyasm
+INSTALL(TARGETS libyasm EXPORT ${targetsFile}
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -76,5 +77,5 @@ INSTALL(FILES
     symrec.h
     valparam.h
     value.h
-    DESTINATION include/libyasm
+    DESTINATION include${verDir}/libyasm
     )
