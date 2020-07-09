@@ -82,4 +82,4 @@ INSTALL(FILES
     DESTINATION include${verDir}/libyasm
     )
 
-ENDIF(INSTALL_YASM_ONLY)
+ENDIF()

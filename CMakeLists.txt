@@ -58,4 +58,4 @@ INSTALL(FILES
     DESTINATION include${verDir}
     )
 
-ENDIF(INSTALL_YASM_ONLY)
+ENDIF()
