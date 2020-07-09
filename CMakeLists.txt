@@ -36,6 +36,11 @@ INCLUDE_DIRECTORIES(AFTER ${CMAKE_BINARY_DIR} ${yasm_SOURCE_DIR})
 INCLUDE(ConfigureChecks.cmake)
 
 OPTION(INSTALL_YASM_ONLY "Only install the yasm executable" OFF)
+IF(INSTALL_YASM_ONLY)
+  SET(OPT_INSTALL EXCLUDE_FROM_ALL)
+ELSE()
+  SET(OPT_INSTALL)
+ENDIF()
 
 IF(DEFINED YASM_VER)
   SET(ver _${YASM_VER})
@@ -48,14 +53,10 @@ ADD_SUBDIRECTORY(libyasm)
 ADD_SUBDIRECTORY(modules)
 ADD_SUBDIRECTORY(frontends)
 
-IF(NOT INSTALL_YASM_ONLY)
-
-INSTALL(EXPORT ${targetsFile} DESTINATION bin/cmake)
+INSTALL(EXPORT ${targetsFile} DESTINATION bin/cmake ${OPT_INSTALL})
 
 INSTALL(FILES
     libyasm.h
     ${CMAKE_BINARY_DIR}/libyasm-stdint.h
-    DESTINATION include${verDir}
+    DESTINATION include${verDir} ${OPT_INSTALL}
     )
-
-ENDIF()

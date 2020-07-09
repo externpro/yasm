@@ -43,12 +43,11 @@ ELSE(BUILD_SHARED_LIBS)
         )
 ENDIF(BUILD_SHARED_LIBS)
 
-IF(NOT INSTALL_YASM_ONLY)
-
 INSTALL(TARGETS libyasm EXPORT ${targetsFile}
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+    ${OPT_INSTALL}
     )
 
 INSTALL(FILES
@@ -80,6 +79,5 @@ INSTALL(FILES
     valparam.h
     value.h
     DESTINATION include${verDir}/libyasm
+    ${OPT_INSTALL}
     )
-
-ENDIF()
