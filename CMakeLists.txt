@@ -9,6 +9,7 @@ OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON)
 # Where to look first for cmake modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+INCLUDE(GNUInstallDirs)
 INCLUDE(YasmMacros)
 INCLUDE(VersionGen)
 
@@ -35,28 +36,23 @@ INCLUDE_DIRECTORIES(AFTER ${CMAKE_BINARY_DIR} ${yasm_SOURCE_DIR})
 
 INCLUDE(ConfigureChecks.cmake)
 
-OPTION(INSTALL_YASM_ONLY "Only install the yasm executable" OFF)
-IF(INSTALL_YASM_ONLY)
+OPTION(XP_INSTALL_YASM_EXE_ONLY "Only install the yasm executable" OFF)
+IF(XP_INSTALL_YASM_EXE_ONLY)
   SET(OPT_INSTALL EXCLUDE_FROM_ALL)
 ELSE()
   SET(OPT_INSTALL)
 ENDIF()
-
-IF(DEFINED YASM_VER)
-  SET(ver _${YASM_VER})
-  SET(verDir /${PROJECT_NAME}${ver})
-ENDIF()
-SET(targetsFile ${PROJECT_NAME}${ver}-targets)
+SET(targetsFile ${PROJECT_NAME}-targets)
 
 ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(libyasm)
 ADD_SUBDIRECTORY(modules)
 ADD_SUBDIRECTORY(frontends)
 
-INSTALL(EXPORT ${targetsFile} DESTINATION bin/cmake ${OPT_INSTALL})
+INSTALL(EXPORT ${targetsFile} DESTINATION ${CMAKE_INSTALL_BINDIR}/cmake ${OPT_INSTALL})
 
 INSTALL(FILES
     libyasm.h
     ${CMAKE_BINARY_DIR}/libyasm-stdint.h
-    DESTINATION include${verDir} ${OPT_INSTALL}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} ${OPT_INSTALL}
     )
