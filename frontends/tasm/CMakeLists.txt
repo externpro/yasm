@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES(
 
 ADD_CUSTOM_COMMAND(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/license.c
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/frontends/yasm/genstring.py
+    COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/frontends/yasm/genstring.py
         license_msg
         ${CMAKE_CURRENT_BINARY_DIR}/license.c
         ${CMAKE_SOURCE_DIR}/COPYING

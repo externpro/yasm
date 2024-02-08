@@ -3,7 +3,7 @@ ADD_CUSTOM_COMMAND(
         ${CMAKE_CURRENT_BINARY_DIR}/x86insns.c
         ${CMAKE_CURRENT_BINARY_DIR}/x86insn_gas.gperf
         ${CMAKE_CURRENT_BINARY_DIR}/x86insn_nasm.gperf
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/arch/x86/gen_x86_insn.py
+    COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/arch/x86/gen_x86_insn.py
            ${CMAKE_CURRENT_BINARY_DIR}/x86insns.c
            ${CMAKE_CURRENT_BINARY_DIR}/x86insn_gas.gperf
            ${CMAKE_CURRENT_BINARY_DIR}/x86insn_nasm.gperf

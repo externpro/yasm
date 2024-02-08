@@ -74,11 +74,11 @@ IF (NOT YASM_LIBRARY)
     MESSAGE(FATAL_ERROR "Could not find yasm library")
 ENDIF (NOT YASM_LIBRARY)
 
-INCLUDE(FindPythonInterp)
+INCLUDE(FindPython)
 
-IF (NOT PYTHON_EXECUTABLE)
+IF (NOT Python_EXECUTABLE)
     MESSAGE(FATAL_ERROR "Could not find Python executable")
-ENDIF (NOT PYTHON_EXECUTABLE)
+ENDIF (NOT Python_EXECUTABLE)
 
 INCLUDE_DIRECTORIES(${SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
@@ -88,7 +88,7 @@ ADD_CUSTOM_COMMAND(
         ${CMAKE_CURRENT_BINARY_DIR}/x86insns.c
         ${CMAKE_CURRENT_BINARY_DIR}/x86insn_gas.gperf
         ${CMAKE_CURRENT_BINARY_DIR}/x86insn_nasm.gperf
-    COMMAND ${PYTHON_EXECUTABLE} ${SOURCE_DIR}/gen_x86_insn.py
+    COMMAND ${Python_EXECUTABLE} ${SOURCE_DIR}/gen_x86_insn.py
            ${CMAKE_CURRENT_BINARY_DIR}/x86insns.c
            ${CMAKE_CURRENT_BINARY_DIR}/x86insn_gas.gperf
            ${CMAKE_CURRENT_BINARY_DIR}/x86insn_nasm.gperf
