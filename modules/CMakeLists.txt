@@ -78,8 +78,6 @@ ELSE(regen_init_plugin_c)
     MESSAGE(STATUS "Not regenerating static modules file (unchanged)")
 ENDIF(regen_init_plugin_c)
 
-SET_SOURCE_FILES_PROPERTIES(init_plugin.c GENERATED)
-
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 IF(BUILD_SHARED_LIBS)
