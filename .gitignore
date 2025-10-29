@@ -70,3 +70,7 @@ x64
 *.log
 *.trs
 .dirstamp
+# externpro
+.env
+_bld*/
+docker-compose.override.yml
