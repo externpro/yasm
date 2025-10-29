@@ -7,12 +7,13 @@ endif (COMMAND cmake_policy)
 
 OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-# Where to look first for cmake modules
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+# Where to look for cmake modules
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 INCLUDE(GNUInstallDirs)
 INCLUDE(YasmMacros)
 INCLUDE(VersionGen)
+INCLUDE(xpflags)
 
 OPTION(ENABLE_NLS "Enable message translations" OFF)
 
@@ -38,7 +39,16 @@ INCLUDE_DIRECTORIES(AFTER ${CMAKE_BINARY_DIR} ${yasm_SOURCE_DIR})
 INCLUDE(ConfigureChecks.cmake)
 
 OPTION(XP_INSTALL_YASM_EXE_ONLY "Only install the yasm executable" OFF)
+if(NOT DEFINED XP_INSTALL_CMAKEDIR)
+  set(XP_INSTALL_CMAKEDIR ${CMAKE_INSTALL_DATADIR}/cmake)
+endif()
 SET(targetsFile ${PROJECT_NAME}-targets)
+set(exe ${PROJECT_NAME})
+if(DEFINED XP_NAMESPACE)
+  set(nameSpace NAMESPACE ${XP_NAMESPACE}::)
+  string(PREPEND exe "${XP_NAMESPACE}::")
+endif()
+xpPackageDevel(TARGETS_FILE ${targetsFile} EXE ${exe})
 
 ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(libyasm)
