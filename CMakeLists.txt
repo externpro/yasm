@@ -1,4 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4...3.31)
+set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES .devcontainer/cmake/xproinc.cmake)
 PROJECT(yasm)
 if (COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
