@@ -1,4 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4...3.31)
+set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES .devcontainer/cmake/xproinc.cmake)
 PROJECT(yasm)
 if (COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
@@ -6,12 +7,13 @@ endif (COMMAND cmake_policy)
 
 OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-# Where to look first for cmake modules
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+# Where to look for cmake modules
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 INCLUDE(GNUInstallDirs)
 INCLUDE(YasmMacros)
 INCLUDE(VersionGen)
+INCLUDE(xpflags)
 
 OPTION(ENABLE_NLS "Enable message translations" OFF)
 
@@ -37,22 +39,30 @@ INCLUDE_DIRECTORIES(AFTER ${CMAKE_BINARY_DIR} ${yasm_SOURCE_DIR})
 INCLUDE(ConfigureChecks.cmake)
 
 OPTION(XP_INSTALL_YASM_EXE_ONLY "Only install the yasm executable" OFF)
-IF(XP_INSTALL_YASM_EXE_ONLY)
-  SET(OPT_INSTALL EXCLUDE_FROM_ALL)
-ELSE()
-  SET(OPT_INSTALL)
-ENDIF()
+if(NOT DEFINED XP_INSTALL_CMAKEDIR)
+  set(XP_INSTALL_CMAKEDIR ${CMAKE_INSTALL_DATADIR}/cmake)
+endif()
 SET(targetsFile ${PROJECT_NAME}-targets)
+set(exe ${PROJECT_NAME})
+if(DEFINED XP_NAMESPACE)
+  set(nameSpace NAMESPACE ${XP_NAMESPACE}::)
+  string(PREPEND exe "${XP_NAMESPACE}::")
+endif()
+xpPackageDevel(TARGETS_FILE ${targetsFile} EXE ${exe})
 
 ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(libyasm)
 ADD_SUBDIRECTORY(modules)
 ADD_SUBDIRECTORY(frontends)
 
-INSTALL(EXPORT ${targetsFile} DESTINATION ${CMAKE_INSTALL_BINDIR}/cmake ${OPT_INSTALL})
+if(XP_INSTALL_YASM_EXE_ONLY)
+INSTALL(EXPORT ${targetsFile} DESTINATION ${XP_INSTALL_CMAKEDIR} ${nameSpace})
+endif()
 
+if(NOT XP_INSTALL_YASM_EXE_ONLY)
 INSTALL(FILES
     libyasm.h
     ${CMAKE_BINARY_DIR}/libyasm-stdint.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} ${OPT_INSTALL}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
+endif()
