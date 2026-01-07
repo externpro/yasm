@@ -10,10 +10,8 @@ OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON)
 # Where to look for cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-INCLUDE(GNUInstallDirs)
 INCLUDE(YasmMacros)
 INCLUDE(VersionGen)
-INCLUDE(xpflags)
 
 OPTION(ENABLE_NLS "Enable message translations" OFF)
 
@@ -39,16 +37,14 @@ INCLUDE_DIRECTORIES(AFTER ${CMAKE_BINARY_DIR} ${yasm_SOURCE_DIR})
 INCLUDE(ConfigureChecks.cmake)
 
 OPTION(XP_INSTALL_YASM_EXE_ONLY "Only install the yasm executable" OFF)
-if(NOT DEFINED XP_INSTALL_CMAKEDIR)
-  set(XP_INSTALL_CMAKEDIR ${CMAKE_INSTALL_DATADIR}/cmake)
-endif()
 SET(targetsFile ${PROJECT_NAME}-targets)
-set(exe ${PROJECT_NAME})
-if(DEFINED XP_NAMESPACE)
-  set(nameSpace NAMESPACE ${XP_NAMESPACE}::)
-  string(PREPEND exe "${XP_NAMESPACE}::")
-endif()
-xpPackageDevel(TARGETS_FILE ${targetsFile} EXE ${exe})
+xpExternPackage(NAMESPACE ${XP_NAMESPACE}
+  TARGETS_FILE ${targetsFile} EXE ${PROJECT_NAME}
+  BASE v1.3.0 XPDIFF "patch"
+  WEB "http://yasm.tortall.net/" UPSTREAM "github.com/yasm/yasm"
+  DESC "assembler and disassembler for the Intel x86 architecture"
+  LICENSE "[BSD-2-Clause](https://github.com/yasm/yasm/blob/v1.3.0/COPYING 'BSD 2-Clause Simplified License')"
+  )
 
 ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(libyasm)
@@ -56,7 +52,10 @@ ADD_SUBDIRECTORY(modules)
 ADD_SUBDIRECTORY(frontends)
 
 if(XP_INSTALL_YASM_EXE_ONLY)
-INSTALL(EXPORT ${targetsFile} DESTINATION ${XP_INSTALL_CMAKEDIR} ${nameSpace})
+  if(DEFINED XP_NAMESPACE)
+    set(nameSpace NAMESPACE ${XP_NAMESPACE}::)
+  endif()
+  INSTALL(EXPORT ${targetsFile} DESTINATION ${XP_INSTALL_CMAKEDIR} ${nameSpace})
 endif()
 
 if(NOT XP_INSTALL_YASM_EXE_ONLY)
