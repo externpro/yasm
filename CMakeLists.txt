@@ -1,5 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4...3.31)
-set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES .devcontainer/cmake/xproinc.cmake)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4...4.3)
 PROJECT(yasm)
 if (COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
@@ -38,24 +37,26 @@ INCLUDE(ConfigureChecks.cmake)
 
 OPTION(XP_INSTALL_YASM_EXE_ONLY "Only install the yasm executable" OFF)
 SET(targetsFile ${PROJECT_NAME}-targets)
-xpExternPackage(NAMESPACE ${XP_NAMESPACE}
-  TARGETS_FILE ${targetsFile} EXE ${PROJECT_NAME}
-  BASE v1.3.0 XPDIFF "patch"
-  WEB "http://yasm.tortall.net/" UPSTREAM "github.com/yasm/yasm"
-  DESC "assembler and disassembler for the Intel x86 architecture"
-  LICENSE "[BSD-2-Clause](https://github.com/yasm/yasm/blob/v1.3.0/COPYING 'BSD 2-Clause Simplified License')"
-  )
+if(NOT DEFINED CMAKE_INSTALL_CMAKEDIR)
+  set(CMAKE_INSTALL_CMAKEDIR ${CMAKE_INSTALL_DATADIR}/cmake)
+endif()
 
 ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(libyasm)
 ADD_SUBDIRECTORY(modules)
 ADD_SUBDIRECTORY(frontends)
 
+if(COMMAND xpExternPackage)
+  xpExternPackage(TARGETS_FILE ${targetsFile}
+    EXE ${PROJECT_NAME} DEFAULT_TARGETS ${PROJECT_NAME}
+    BASE v1.3.0 XPDIFF "patch"
+    WEB "http://yasm.tortall.net/" UPSTREAM "github.com/yasm/yasm"
+    DESC "assembler and disassembler for the Intel x86 architecture"
+    LICENSE "[BSD-2-Clause](https://github.com/yasm/yasm/blob/v1.3.0/COPYING 'BSD 2-Clause Simplified License')"
+    )
+endif()
 if(XP_INSTALL_YASM_EXE_ONLY)
-  if(DEFINED XP_NAMESPACE)
-    set(nameSpace NAMESPACE ${XP_NAMESPACE}::)
-  endif()
-  INSTALL(EXPORT ${targetsFile} DESTINATION ${CMAKE_INSTALL_CMAKEDIR} ${nameSpace})
+  INSTALL(EXPORT ${targetsFile} DESTINATION ${CMAKE_INSTALL_CMAKEDIR} NAMESPACE ${PROJECT_NAME}::)
 endif()
 
 if(NOT XP_INSTALL_YASM_EXE_ONLY)
